@@ -1,0 +1,23 @@
+{
+  "name": "node_express_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.5",
+    "prettier": "^2.1.2"
+  },
+  "devDependencies": {
+    "add-gitignore": "^1.1.1",
+    "eslint": "^7.11.0",
+    "eslint-config-google": "^0.14.0"
+  }
+}
