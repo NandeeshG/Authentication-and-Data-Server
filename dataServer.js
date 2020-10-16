@@ -1,4 +1,5 @@
-/* eslint-disable indent */
+/* eslint-disable no-unused-vars,indent*/
+
 // to access env tokens
 require('dotenv').config();
 // express module makes routing easier (from npm)

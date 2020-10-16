@@ -24,6 +24,12 @@ const port = process.env.PORT || process.env.AUTH_PORT;
 // other user data according to the application (eg - payment records)
 const users = [];
 
+// 1. This will contain id of users that are loggedIN.
+// 2. Only loggingOut will remove them from this list.
+// TODO: If I add expiring tokens, then take care of checking
+// that token is not expired when authenticating.
+let loggedIn = [];
+
 // express app
 const app = express();
 // to add the middleware that will parse json in req body
@@ -91,11 +97,16 @@ app.post('/api/auth/register', async (req, res) => {
       };
       users.push(newuser);
       res.status(200).send(loginUser(newuser));
-      // res.status(200).send({success: 'registration success'});
     }
   } catch (err) {
     res.status(500).send({error: err.name});
   }
+});
+
+app.delete('/api/auth/logout', authenticate, (req, res) => {
+  const id = req.body.head.id;
+  loggedIn = loggedIn.filter((i) => i !== id);
+  res.status(200).send({success: 'logged out!'});
 });
 
 // Authenticate and put username, id, iat in req head, rest in req body
@@ -116,8 +127,15 @@ function authenticate(req, res, next) {
     } else {
       const findUser = users.find((u) => u.id === user.id);
       if (findUser == undefined) {
+        // User not registered
         return res.status(403).send({error: 'No such user!'});
+      } else if (!loggedIn.includes(findUser.id)) {
+        // User not loggedIn
+        return res.status(403).send({error: 'Not loggedIn!'});
       }
+
+      // Now user exists in database and is also loggedIn
+
       // Put details in req body for the routes to use however they want
       req.body = {
         head: {
@@ -138,13 +156,14 @@ function authenticate(req, res, next) {
 const loginUser = ({username, id}) => {
   const payload = {username, id};
   const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
+  loggedIn.push(id);
   return {accessToken: token};
 };
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Get all users - REMOVE WHEN NOT IN DEV
 app.get('/dev/auth/all', (req, res) => {
-  res.status(200).send({users: users});
+  res.status(200).send({users: users, loggedIn: loggedIn});
 });
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
