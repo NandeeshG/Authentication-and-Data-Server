@@ -1,0 +1,269 @@
+{
+	"info": {
+		"_postman_id": "e4cc67e3-102e-4578-ae80-8b1c4ac3f6eb",
+		"name": "node_auth_api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "127.0.0.1:5001/api",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5001/api",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5001",
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1:5001/dev/auth/all",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5001/dev/auth/all",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5001",
+					"path": [
+						"dev",
+						"auth",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5001/api/auth/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\" : \"aaa4\",\n    \"password\" : \"bbb4\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5001/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1:5001/api/auth/login",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\" : \"aaa4\",\n    \"password\" : \"bbb4\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5001/api/auth/login",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1:5001/api/auth/head",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFhYTMiLCJpZCI6IjE4ZDgwZmVlLTAyNmItNDIyYi05YjIyLWY5YmIyZDRkODZlMyIsImlhdCI6MTYwMjg3NjUyNX0.0KzRt_Elbbf8WTWChImCakI8nOW5GJg1b3rCuidSTtQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5001/api/auth/head",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"auth",
+						"head"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1:5002/dev/data/all",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5002/dev/data/all",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5002",
+					"path": [
+						"dev",
+						"data",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1:5002/api/data/",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFhYTQiLCJpZCI6IjhiMDNmOTA2LWI1OWMtNDc2Zi04YTA4LWVkNzgzODI4NWQ5YSIsImlhdCI6MTYwMjg3OTA5Nn0.VkK8u3g7Y6d61nT0BMDCvxBhDpmHNoi3AcFrjARPhso",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\" : \"patient2\",\n    \"age\" : 20,\n    \"gender\" : \"male\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5002/api/data/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5002",
+					"path": [
+						"api",
+						"data",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1:5002/api/data ",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFhYTQiLCJpZCI6IjhiMDNmOTA2LWI1OWMtNDc2Zi04YTA4LWVkNzgzODI4NWQ5YSIsImlhdCI6MTYwMjg3OTA5Nn0.VkK8u3g7Y6d61nT0BMDCvxBhDpmHNoi3AcFrjARPhso",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5002/api/data ",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5002",
+					"path": [
+						"api",
+						"data "
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1:5001/api/auth/logout",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFhYTQiLCJpZCI6IjhiMDNmOTA2LWI1OWMtNDc2Zi04YTA4LWVkNzgzODI4NWQ5YSIsImlhdCI6MTYwMjg3OTA5Nn0.VkK8u3g7Y6d61nT0BMDCvxBhDpmHNoi3AcFrjARPhso",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5001/api/auth/logout",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
