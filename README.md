@@ -1,12 +1,24 @@
 ## NodeJS + ExpressJS Authentication and Data Server
 
+### to update in readme -> no login, .env, get to post, delete to post
+
+## Latest additions (20Oct) ->
+
+1. Added NO_LOGIN_AFTER_REGISTER boolean
+2. Added CORS Policy allowance in auth server only
+3. Login is now a post request (need to update this in home_page)
+4. Logout too is now a post request (need to update this in home_page)
+5. Added user reset route in auth and data servers
+6. Added development env variable reference for auth and data servers.
+
 ### Utilising
 
 1. bcrypt for storing hashed passwords
 2. JWT for token based server-client communication
 3. different data and authentication servers at different ports
 
-### Features 
+### Features
+
 1. Register a user with username, password
 2. Login with username and password
 3. Access/Update user data - only if accessToken is verified
@@ -28,5 +40,6 @@
 ### Todos
 
 1. Add expiring tokens. (currently only user logouts will cancel access of a token)
+2. Add reset routes so that I don't need to restart server to clear data.
 
 **THIS IS ONLY BACKEND - USE POSTMAN or SIMILAR TOOLS FOR TESTING**

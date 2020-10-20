@@ -17,7 +17,7 @@ const authServer = require('./authServer.js');
 // 3. The actual data inside this can be controlled
 // by the client.
 // 4. Each data item has a head(id,username,iat) and body(as per client)
-const data = [];
+let data = [];
 
 // express app
 const app = express();
@@ -56,10 +56,16 @@ app.post('/api/data', authServer.authenticate, (req, res) => {
 });
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// Get all users data - REMOVE WHEN NOT IN DEV
-app.get('/dev/data/all', (req, res) => {
-  res.status(200).send({data: data});
-});
+// Only in dev
+if (process.env.DEVELOPMENT === 'true') {
+  app.get('/dev/data/all', (req, res) => {
+    res.status(200).send({data: data});
+  });
+  app.get('/dev/data/reset', (req, res) => {
+    data = [];
+    res.status(200).send({success: 'Reset successful!'});
+  });
+}
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 app.listen(port, () => console.log(`Data server running at ${port}`));

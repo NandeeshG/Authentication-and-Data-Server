@@ -15,6 +15,8 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 // is env doesn't set any port then use 5000
 const port = process.env.PORT || process.env.AUTH_PORT;
+// Automatically login after registration??
+const NO_LOGIN_AFTER_REGISTER = true;
 
 // 1. users data for temporary check, should be a database ideally.
 // 2. users data will only contain id, username and password(hashed).
@@ -22,7 +24,7 @@ const port = process.env.PORT || process.env.AUTH_PORT;
 // but its robustness needs to be verified.
 // 4. The JWT generated token will be used on another server to access.
 // other user data according to the application (eg - payment records)
-const users = [];
+let users = [];
 
 // 1. This will contain id of users that are loggedIN.
 // 2. Only loggingOut will remove them from this list.
@@ -34,6 +36,18 @@ let loggedIn = [];
 const app = express();
 // to add the middleware that will parse json in req body
 app.use(bodyParser.json());
+
+// CORS Policy, allowance
+// For a specific domain, change '*' to that value
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
+  next();
+});
 
 // // to serve files from media folder (no other app.get needed)
 // // simply localhost:PORT/media/[filename].[ext] will work
@@ -55,7 +69,7 @@ app.get('/api', (req, res) => {
 // -----
 
 // Login returns only the jwt token
-app.get('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   // First Autheticate, then Authorise
   try {
     // find by username in users array
@@ -96,14 +110,19 @@ app.post('/api/auth/register', async (req, res) => {
         id: uuid.v4(),
       };
       users.push(newuser);
-      res.status(200).send(loginUser(newuser));
+      if (NO_LOGIN_AFTER_REGISTER === true) {
+        res.status(200).send({success: 'Registration successful!'});
+      } else {
+        res.status(200).send(loginUser(newuser));
+      }
     }
   } catch (err) {
     res.status(500).send({error: err.name});
   }
 });
 
-app.delete('/api/auth/logout', authenticate, (req, res) => {
+app.post('/api/auth/logout', authenticate, (req, res) => {
+  // console.log(req);
   const id = req.body.head.id;
   loggedIn = loggedIn.filter((i) => i !== id);
   res.status(200).send({success: 'logged out!'});
@@ -112,6 +131,8 @@ app.delete('/api/auth/logout', authenticate, (req, res) => {
 // Authenticate and put username, id, iat in req head, rest in req body
 // eslint-disable-next-line require-jsdoc
 function authenticate(req, res, next) {
+  // console.log(req.headers);
+
   const authHeader = req.headers['authorization'];
 
   // Send response as token wasn't found
@@ -161,10 +182,17 @@ const loginUser = ({username, id}) => {
 };
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// Get all users - REMOVE WHEN NOT IN DEV
-app.get('/dev/auth/all', (req, res) => {
-  res.status(200).send({users: users, loggedIn: loggedIn});
-});
+// Only in dev
+if (process.env.DEVELOPMENT === 'true') {
+  app.get('/dev/auth/all', (req, res) => {
+    res.status(200).send({users: users, loggedIn: loggedIn});
+  });
+  app.post('/dev/auth/reset', (req, res) => {
+    users = [];
+    loggedIn = [];
+    res.status(200).send({success: 'Reset successful!'});
+  });
+}
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 app.listen(port, () => console.log(`Auth server running at ${port}`));
