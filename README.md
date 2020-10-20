@@ -1,7 +1,5 @@
 ## NodeJS + ExpressJS Authentication and Data Server
 
-### to update in readme -> no login, .env, get to post, delete to post
-
 ## Latest additions (20Oct) ->
 
 1. Added NO_LOGIN_AFTER_REGISTER boolean
@@ -39,7 +37,7 @@
 
 ### Todos
 
+0. Reflect latest changes in postman and home_page.html
 1. Add expiring tokens. (currently only user logouts will cancel access of a token)
-2. Add reset routes so that I don't need to restart server to clear data.
 
 **THIS IS ONLY BACKEND - USE POSTMAN or SIMILAR TOOLS FOR TESTING**
