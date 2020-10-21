@@ -7,13 +7,13 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 // path used to join filename and __dirname
 const path = require('path');
-// using uuid to add unique id to each user
+// using uuid to add unique id to each user (for server)
 const uuid = require('uuid');
 // bodyParser is to get body from req (from npm)
 const bodyParser = require('body-parser');
 // to create jwt
 const jwt = require('jsonwebtoken');
-// is env doesn't set any port then use 5000
+// if env doesn't set any port then use 5000
 const port = process.env.PORT || process.env.AUTH_PORT;
 // Automatically login after registration??
 const NO_LOGIN_AFTER_REGISTER = true;
@@ -21,16 +21,10 @@ const NO_LOGIN_AFTER_REGISTER = true;
 // 1. users data for temporary check, should be a database ideally.
 // 2. users data will only contain id, username and password(hashed).
 // 3. id can be used as PRIMARY_KEY in Databses. username can also be used,
-// but its robustness needs to be verified.
+// but it might not be that efficient
 // 4. The JWT generated token will be used on another server to access.
 // other user data according to the application (eg - payment records)
 let users = [];
-
-// 1. This will contain id of users that are loggedIN.
-// 2. Only loggingOut will remove them from this list.
-// TODO: If I add expiring tokens, then take care of checking
-// that token is not expired when authenticating.
-let loggedIn = [];
 
 // express app
 const app = express();
@@ -41,7 +35,10 @@ app.use(bodyParser.json());
 // For a specific domain, change '*' to that value
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
+  res.header(
+    'Access-Control-Allow-Methods',
+    'GET,HEAD,OPTIONS,POST,PUT,DELETE'
+  );
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
@@ -49,24 +46,18 @@ app.use(function (req, res, next) {
   next();
 });
 
-// // to serve files from media folder (no other app.get needed)
-// // simply localhost:PORT/media/[filename].[ext] will work
-// app.use('/media', express.static('media'));
-
 // Home page route
+// ADD BUTTONS TO EMULATE A CLIENT HERE
+// ADD BUTTONS TO CHECK ALL SERVER DATA HERE
 app.get('/api', (req, res) => {
   res.status(200).sendFile(path.join(__dirname + '/home_page.html'));
 });
 
-// -----
-// // Fetch username,id,iat (not pwd)
-// app.get('/api/auth/head', authenticate, (req, res) => {
-//  res.status(200).send(req.body.head);
-// });
-// This is not required to client, as it can go through /api/data
-// for data needs, and save their username locally. (no need to tell
-// them their id and pwds)
-// -----
+app.get('/api/auth/user', authenticate, (req, res) => {
+  // after authenticate we have username etc in req
+  // so we return the username for now
+  res.status(200).send({user: {username: req.body.head.username}});
+});
 
 // Login returns only the jwt token
 app.post('/api/auth/login', async (req, res) => {
@@ -121,14 +112,15 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-app.post('/api/auth/logout', authenticate, (req, res) => {
+// NOT DOING ANYTHING HERE FOR NOW
+app.delete('/api/auth/logout', authenticate, (req, res) => {
   // console.log(req);
-  const id = req.body.head.id;
-  loggedIn = loggedIn.filter((i) => i !== id);
+  // const id = req.body.head.id;
+  // loggedIn = loggedIn.filter((i) => i !== id);
   res.status(200).send({success: 'logged out!'});
 });
 
-// Authenticate and put username, id, iat in req head, rest in req body
+// Authenticate by token and put username, id, iat in req head, rest in req body
 // eslint-disable-next-line require-jsdoc
 function authenticate(req, res, next) {
   // console.log(req.headers);
@@ -150,12 +142,7 @@ function authenticate(req, res, next) {
       if (findUser == undefined) {
         // User not registered
         return res.status(403).send({error: 'No such user!'});
-      } else if (!loggedIn.includes(findUser.id)) {
-        // User not loggedIn
-        return res.status(403).send({error: 'Not loggedIn!'});
       }
-
-      // Now user exists in database and is also loggedIn
 
       // Put details in req body for the routes to use however they want
       req.body = {
@@ -177,7 +164,6 @@ function authenticate(req, res, next) {
 const loginUser = ({username, id}) => {
   const payload = {username, id};
   const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
-  loggedIn.push(id);
   return {accessToken: token};
 };
 
@@ -189,7 +175,6 @@ if (process.env.DEVELOPMENT === 'true') {
   });
   app.post('/dev/auth/reset', (req, res) => {
     users = [];
-    loggedIn = [];
     res.status(200).send({success: 'Reset successful!'});
   });
 }
