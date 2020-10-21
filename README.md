@@ -1,5 +1,11 @@
 ## NodeJS + ExpressJS Authentication and Data Server
 
+## Latest additions (21Oct) ->
+
+1. This branch has routes specially for nuxtjs/auth
+2. Removed server side storage of tokens as that defeats the whole purpose of JWT.
+3. Will soon merge to main after some more small changes
+
 ## Latest additions (20Oct) ->
 
 1. Added NO_LOGIN_AFTER_REGISTER boolean
